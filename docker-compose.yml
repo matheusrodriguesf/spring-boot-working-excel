@@ -1,0 +1,30 @@
+version: '3'
+services:
+  bookstore-db:
+    image: postgres
+    container_name: bookstore-db
+    environment:
+      - POSTGRES_PASSWORD=bookstore
+      - POSTGRES_USER=bookstore
+      - POSTGRES_DB=bookstore
+    ports:
+      - 5432:5432
+    networks:
+      - postgres-network
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=matheusarcelino@emailteste.com
+      - PGADMIN_DEFAULT_PASSWORD=Pgadmin123
+    ports:
+      - 16543:80
+    depends_on:
+      - bookstore-db
+    networks:
+      - postgres-network            
+
+networks:
+  postgres-network:
+    driver: bridge
