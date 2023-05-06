@@ -37,4 +37,20 @@ public class LivroController {
         var exporter = new ExcelExporter<>(livros, columns, "Livros");
         exporter.export(response);
     }
+
+    @GetMapping("/export/excel/livros")
+    public void exportToExcelLivros(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        var formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        var currentDateTime = LocalDateTime.now().format(formatter);
+
+        var headerKey = "Content-Disposition";
+        var headerValue = "attachment; filename=livros_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        var livros = service.getLivros();
+        String[] columns = { "titulo", "isbn", "editora", "autor", "ano", "categoria" };
+        var exporter = new ExcelExporter<>(livros, columns, "Livros");
+        exporter.export(response);
+    }
 }
